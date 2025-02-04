@@ -2,18 +2,35 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./components/homePage";
 import LoginPage from "./components/loginPage";
-import ProtectedRoute from "./components/ProtectedRoute";
 import ListInfo from "./components/listInfo";
-
+import { Provider } from "react-redux";
+import ProtectedRoute from "./components/protectedRoute";
+import store from "./components/store";
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/listInfo" element={<ListInfo />} />
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/listInfo"
+            element={
+              <ProtectedRoute>
+                <ListInfo />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </Provider>
   );
 }
 

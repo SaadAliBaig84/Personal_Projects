@@ -115,6 +115,13 @@
   font-family: Arial, sans-serif;
 }
 
+.input p {
+  color: red;
+}
+
+@theme {
+  --color-red: #ff0000;
+}
 .input img,
 .input svg {
   width: 24px;
@@ -214,4 +221,14 @@ input:focus {
   100% {
     stroke: #ffc47e;
   }
+}
+
+.text-editor {
+  width: 100%;
+  min-height: 300px;
+  border-radius: 8px;
+  background: white;
+}
+.ql-editor {
+  min-height: 200px;
 }

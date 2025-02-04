@@ -1,16 +1,12 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
-function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
+const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  // If no token is found, redirect to login page
-  if (!token) {
-    console.log(token);
-    return <Navigate to="/" replace />;
-  }
-
-  return children;  // If token is present, render the protected page
-}
+  return isAuthenticated ? children : <Navigate to={"/"}></Navigate>;
+};
 
 export default ProtectedRoute;
