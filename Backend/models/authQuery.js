@@ -1,18 +1,16 @@
-const {query}=require('./psqlWrapper');
+const { User } = require("./psqlWrapper");
 
-const createUser = async function(name, email, pass){
-    try {
-        const user= await query(`
-            INSERT INTO Users (name, email, password) VALUES ($1,$2,$3)
-            RETURNING *;    
-        `,[name, email, pass]
-        );
-        return user.rows[0];
-    } catch (error) {
-        console.log(error);
-    }
-}
+const createUser = async function (name, email, password) {
+  try {
+    const user = new User({ name, email, password });
+    await user.save();
+    console.log("✅ User created successfully:", user);
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-module.exports={
-    createUser
-}
+module.exports = {
+  createUser,
+};
