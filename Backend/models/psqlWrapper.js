@@ -54,9 +54,14 @@ const dbConnect = async () => {
 
 const userSchema = new mongoose.Schema(
   {
+    google_data: {
+      google_id: { type: String, unique: true },
+      access_token: String,
+      refresh_token: String,
+    },
     name: { type: String, required: true, maxlength: 100 },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true, minlength: 6 },
+    password: { type: String, minlength: 6 },
     created_at: { type: Date, default: Date.now },
     last_updated: { type: Date, default: Date.now },
   },

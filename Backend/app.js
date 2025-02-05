@@ -11,16 +11,21 @@ const app = express();
 const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
-// app.use(
-//   session({
-//     secret: "TOPSECRETWORD",
-//     resave: false,
-//     saveUninitialized: true,
-//   })
-// );
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    secret: "TOPSECRETWORD",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use((req, res, next) => {
   console.log(`METHOD: ${req.method}, Path: ${req.path}`);
   next();
