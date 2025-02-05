@@ -4,7 +4,7 @@ import { AtSign } from "lucide-react";
 import { KeyRound } from "lucide-react";
 import googleLogo from "../assets/icons8-google.svg";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState, useEffect, useRef } from "react";
 import { login } from "./authSlice";
@@ -21,7 +21,13 @@ function LoginPage() {
 
     //reset();
   };
-
+  const googleLogin = async () => {
+    try {
+      window.location.href = "http://localhost:3000/auth/google";
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const onSubmit = async (data) => {
     try {
       clearErrors();
@@ -92,8 +98,21 @@ function LoginPage() {
   });
   const currCookies = new Cookies();
   const jwt = currCookies.get("jwt");
+  const location = useLocation();
   useEffect(() => {
-    if (jwt) {
+    const queryParams = new URLSearchParams(location.search);
+    if (queryParams.get("jwt")) {
+      console.log("Got params");
+
+      setCookies("jwt", queryParams.get("jwt"), {
+        path: "/",
+        secure: true,
+        sameSite: "Strict",
+        maxAge: 3600,
+      });
+      dispatch(login(queryParams.get("jwt")));
+      navigate("/home");
+    } else if (jwt) {
       navigate("/home");
     } else {
       // Call reset when the component is mounted
@@ -105,7 +124,7 @@ function LoginPage() {
       clearErrors();
       console.log("Not empty dep useEffect"); // Clears all form fields and errors
     }
-  }, [reset, activeTab, clearErrors]);
+  }, [location.search]);
   if (!jwt)
     return (
       <div className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:overflow-visible lg:px-0 flex items-center justify-center">
@@ -303,7 +322,7 @@ function LoginPage() {
             <p className="errorMsg text-red">{errors.general.message}</p>
           )}
 
-          <button className="Buttons googleLogin">
+          <button className="Buttons googleLogin" onClick={googleLogin}>
             <img src={googleLogo} alt="Google Logo" />
             Continue with Google
           </button>

@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState, useMemo } from "react";
-// // Create an axios instance
+import { Cookies } from "react-cookie";
+// Create an axios instance
 // const axiosInstance = axios.create({
 //   baseURL: "http://localhost:3000",
 //   headers: {
@@ -10,12 +11,14 @@ import { useState, useMemo } from "react";
 //   },
 // });
 
-// // Add request interceptor to include token in header
+//Add request interceptor to include token in header
 // axiosInstance.interceptors.request.use(
 //   (config) => {
-//     const token = localStorage.getItem("token");
+
+//     console.log("Getting token");
 //     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
+//       config.headers.Authorization = `Bearer ${jwt}`;
+//       console.log("Got it");
 //     }
 //     return config;
 //   },
@@ -56,7 +59,16 @@ export default function BookList() {
         //console.log("Getting token from local storage...");
         //const token = localStorage.getItem("token");
         //console.log(token);
-        const response = await axios.get("http://localhost:3000/books");
+        console.log("here");
+        const currCookies = new Cookies();
+        const jwt = currCookies.get("jwt");
+        console.log(jwt);
+        const response = await axios.get("http://localhost:3000/books", {
+          headers: {
+            Authorization: `Bearer ${jwt}`, // Sending JWT in Authorization header
+          },
+        });
+
         //setIsAuthenticated(true);
         console.log(response.data);
         return response.data.books.slice(0, 10).map((book) => ({
