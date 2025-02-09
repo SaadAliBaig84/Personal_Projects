@@ -55,7 +55,7 @@ const dbConnect = async () => {
 const userSchema = new mongoose.Schema(
   {
     google_data: {
-      google_id: { type: String, unique: true },
+      google_id: { type: String, unique: true, sparse: true },
       access_token: String,
       refresh_token: String,
     },
@@ -67,10 +67,38 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: { createdAt: "created_at", updatedAt: "last_updated" } }
 );
+const NotesSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference to the User model
+      required: true,
+    },
+    book: {
+      type: String, // Storing the book title instead of referencing a Book model
+      required: true,
+    },
+    notes: [
+      {
+        name: {
+          type: String, // Storing the book title instead of referencing a Book model
+          required: true,
+        },
+        googleDocId: {
+          type: String, // Google Docs Document ID
+          required: true,
+          unique: true, // Ensures no duplicate documents
+        },
+      },
+    ],
+  },
+  { timestamps: true } // ✅ Automatically adds `createdAt` & `updatedAt`
+);
 
 const User = mongoose.model("User", userSchema);
-
+const Notes = mongoose.model("Notes", NotesSchema);
 module.exports = {
   dbConnect,
   User,
+  Notes,
 };

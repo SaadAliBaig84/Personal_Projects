@@ -39,6 +39,8 @@ const authRoutes = require("./routes/authRoutes");
 app.use("/auth", authRoutes);
 const bookRoutes = require("./routes/bookRoutes");
 app.use("/books", bookRoutes);
+const noteRoutes = require("./routes/noteRoutes");
+app.use("/notes", noteRoutes);
 app.listen(port, () => {
   console.log("Server running on port " + port);
 });

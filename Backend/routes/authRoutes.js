@@ -14,7 +14,12 @@ router.post("/signOut", signOut);
 router.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["email", "profile"],
+    scope: [
+      "email",
+      "profile",
+      "https://www.googleapis.com/auth/documents", // Allows creating & editing Google Docs
+      "https://www.googleapis.com/auth/drive.file",
+    ],
     accessType: "offline",
   })
 );

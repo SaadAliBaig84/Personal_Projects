@@ -25,6 +25,7 @@ const signUp = async function (req, res) {
     const params = validateUserParams(req.body, "s");
     const hashedPass = await encyptPass(params.pass);
     const user = await createUser(params.name, params.email, hashedPass);
+    console.log(user.id);
     const currJwt = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, {
       expiresIn: 86400,
     });
@@ -72,7 +73,7 @@ const logIn = async function (req, res) {
       throw Error("Invalid credentials");
     }
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-
+    console.log("User id is: " + user.id);
     const newJwt = jwt.sign({ id: user.id }, jwtSecretKey, {
       expiresIn: 86400,
     });
@@ -90,16 +91,20 @@ const logIn = async function (req, res) {
 const googleSignIn = async (req, res) => {
   try {
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    const newJwt = jwt.sign({ id: req.user.id }, jwtSecretKey, {
-      expiresIn: 86400,
-    });
-    console.log(req.user._doc._id.value);
+
+    const newJwt = jwt.sign(
+      { id: req.user._doc._id.toString() },
+      jwtSecretKey,
+      {
+        expiresIn: 86400,
+      }
+    );
+
     const params = new URLSearchParams({
       name: req.user.name,
       jwt: newJwt,
       googleVerified: true,
     });
-    console.log("sending params");
     res.redirect(`http://localhost:5173?${params}`);
   } catch (error) {
     console.log(error);
@@ -132,7 +137,7 @@ passport.use(
         } else {
           user = await createGoogleUser(profile, accessToken, refreshToken);
         }
-
+        console.log("here, sent back params");
         done(null, { ...user, accessToken, refreshToken });
       } catch (error) {
         console.log(error);
