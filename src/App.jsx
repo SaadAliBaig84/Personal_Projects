@@ -6,6 +6,7 @@ import ListInfo from "./components/listInfo";
 import { Provider } from "react-redux";
 import ProtectedRoute from "./components/protectedRoute";
 import store from "./components/store";
+import Notes from "./components/addNotes";
 function App() {
   return (
     <Provider store={store}>
@@ -25,6 +26,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ListInfo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/addNotes"
+            element={
+              <ProtectedRoute>
+                <Notes />
               </ProtectedRoute>
             }
           />

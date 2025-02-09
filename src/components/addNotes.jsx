@@ -18,10 +18,12 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { login, logout } from "./authSlice";
 import { useDispatch } from "react-redux";
-import AllNotes from "./allNotes";
+import NewNotes from "./newNote";
+import { useLocation } from "react-router-dom";
+import ExistingNotes from "./existingNotes";
 const navigation = [
-  { name: "Library", href: "", current: true },
-  { name: "Notes", href: "", current: false },
+  { name: "Existing Notes", href: "", current: true },
+  { name: "New Notes", href: "", current: false },
   // { name: "Projects", href: "", current: false },
   // { name: "Calendar", href: "", current: false },
 ];
@@ -30,30 +32,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const BooksProvider = new QueryClient();
-
-export default function HomePage() {
+export default function Notes() {
   const dispatch = useDispatch();
   let isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [activeTab, setActiveTab] = useState("Library");
-  const handleSignOut = async () => {
-    try {
-      dispatch(logout());
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Error during sign out:", error);
-    }
-  };
-  //const navigate = useNavigate();
-  // useEffect(() => {
-  //   console.log("here he");
-  //   isAuthenticated = localStorage.getItem("isAuth");
-  //   if (!isAuthenticated) {
-  //     navigate("/");
-  //     console.log("Signing out forcefully");
-  //   }
-  // }, []);
+  const [activeTab, setActiveTab] = useState("Existing Notes");
+  const { state } = useLocation();
 
+  useEffect(() => {
+    console.log(state?.book.title);
+  }, []);
   return (
     <>
       <Disclosure as="nav" className="bg-indigo-400">
@@ -103,60 +90,6 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button
-                type="button"
-                className="relative rounded-full bg-indigo-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
-              >
-                <span className="absolute -inset-1.5" />
-                <span className="sr-only">View notifications</span>
-                <Bell aria-hidden="true" className="size-6" />
-              </button>
-
-              {/* Profile dropdown */}
-              <Menu as="div" className="relative ml-3">
-                <div>
-                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-                    <span className="absolute -inset-1.5" />
-                    <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      className="size-8 rounded-full"
-                    />
-                  </MenuButton>
-                </div>
-                <MenuItems
-                  transition
-                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                >
-                  <MenuItem>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                    >
-                      Your Profile
-                    </a>
-                  </MenuItem>
-                  <MenuItem>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                    >
-                      Settings
-                    </a>
-                  </MenuItem>
-                  <MenuItem>
-                    <button
-                      onClick={handleSignOut}
-                      className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                    >
-                      Sign out
-                    </button>
-                  </MenuItem>
-                </MenuItems>
-              </Menu>
-            </div>
           </div>
         </div>
 
@@ -181,21 +114,8 @@ export default function HomePage() {
           </div>
         </DisclosurePanel>
       </Disclosure>
-      {activeTab === "Library" && (
-        <QueryClientProvider client={BooksProvider}>
-          <BookList />
-        </QueryClientProvider>
-      )}
-      {/* {activeTab === "Notes" ? (
-        localStorage.getItem("googleVerified") ? (
-          <p>Ok</p>
-        ) : (
-          <p>Not Ok</p>
-        )
-      ) : (
-        <p>Someother tab</p>
-      )} */}
-      {activeTab === "Notes" && <AllNotes />}
+      {activeTab === "New Notes" && <NewNotes book={state?.book} />}
+      {activeTab === "Existing Notes" && <ExistingNotes book={state?.book} />}
     </>
   );
 }

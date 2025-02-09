@@ -129,7 +129,6 @@ export default function BookList() {
             <li
               key={index}
               className="flex justify-between gap-x-6 py-5 my-5 cursor-pointer border border-indigo-600 rounded hover:bg-indigo-100"
-              onClick={() => navigate("/listInfo", { state: { book } })}
             >
               <div className="flex min-w-0 gap-x-4">
                 {book.coverImage ? (
@@ -152,6 +151,20 @@ export default function BookList() {
                   </p>
                   <p className="mt-1 text-xs text-gray-500">{book.language}</p>
                 </div>
+                <button
+                  type="button"
+                  className="Buttons text-sm"
+                  onClick={() => navigate("/listInfo", { state: { book } })}
+                >
+                  View Details
+                </button>
+                <button
+                  onClick={() => navigate("/addNotes", { state: { book } })}
+                  type="button"
+                  className="Buttons text-sm"
+                >
+                  Add Notes
+                </button>
               </div>
             </li>
           ))

@@ -16,11 +16,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [cookies, setCookies] = useCookies(["jwt"]);
-  const handleLogin = () => {
-    console.log("Logging in...");
 
-    //reset();
-  };
   const googleLogin = async () => {
     try {
       window.location.href = "http://localhost:3000/auth/google";
@@ -50,7 +46,12 @@ function LoginPage() {
         sameSite: "Strict",
         maxAge: 3600,
       });
+      localStorage.setItem(
+        "googleVerified",
+        response.data.googleVerified.toString()
+      );
       dispatch(login(response.data.jwt));
+      console.log("Set local gv to " + response.data.googleVerified);
       navigate("/home");
       clearErrors();
     } catch (error) {
@@ -101,15 +102,20 @@ function LoginPage() {
   const location = useLocation();
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    if (queryParams.get("jwt")) {
-      console.log("Got params");
 
+    if (queryParams.get("jwt")) {
+      localStorage.setItem(
+        "googleVerified",
+        queryParams.get("googleVerified").toString()
+      );
+      console.log(queryParams.get("googleVerified").toString());
       setCookies("jwt", queryParams.get("jwt"), {
         path: "/",
         secure: true,
         sameSite: "Strict",
         maxAge: 3600,
       });
+      console.log("Set local gv to " + queryParams.get("googleVerified"));
       dispatch(login(queryParams.get("jwt")));
       navigate("/home");
     } else if (jwt) {
@@ -301,14 +307,14 @@ function LoginPage() {
             <div>
               <button
                 onClick={() => clearErrors()}
-                className="Buttons custom-button"
+                className="Buttons"
                 type="submit"
                 //onClick={handleSubmit(onSubmit)}
               >
                 {activeTab}
               </button>
               <button
-                className="Buttons dull-button"
+                className="Buttons"
                 onClick={() =>
                   setActiveTab(activeTab === "Sign In" ? "Sign Up" : "Sign In")
                 }

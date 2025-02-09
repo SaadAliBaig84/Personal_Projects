@@ -20,6 +20,10 @@ const authSlice = createSlice({
       state.token = null;
       console.log("in slice, logout");
       cookies.remove("jwt", { path: "/" });
+      console.log(
+        "Removed local gv i.e " + localStorage.getItem("googleVerified")
+      );
+      localStorage.removeItem("googleVerified");
     },
   },
 });
