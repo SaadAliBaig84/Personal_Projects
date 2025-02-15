@@ -44,7 +44,7 @@ function LoginPage() {
         path: "/",
         secure: true,
         sameSite: "Strict",
-        maxAge: 3600,
+        maxAge: 86400,
       });
       localStorage.setItem(
         "googleVerified",
@@ -108,12 +108,18 @@ function LoginPage() {
         "googleVerified",
         queryParams.get("googleVerified").toString()
       );
+
+      localStorage.setItem(
+        "profilePicture",
+        queryParams.get("profilePicture").toString()
+      );
+      console.log(localStorage.getItem("profilePicture"));
       console.log(queryParams.get("googleVerified").toString());
       setCookies("jwt", queryParams.get("jwt"), {
         path: "/",
         secure: true,
         sameSite: "Strict",
-        maxAge: 3600,
+        maxAge: 86400,
       });
       console.log("Set local gv to " + queryParams.get("googleVerified"));
       dispatch(login(queryParams.get("jwt")));

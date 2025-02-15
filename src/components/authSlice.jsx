@@ -24,6 +24,7 @@ const authSlice = createSlice({
         "Removed local gv i.e " + localStorage.getItem("googleVerified")
       );
       localStorage.removeItem("googleVerified");
+      localStorage.removeItem("profilePicture");
     },
   },
 });

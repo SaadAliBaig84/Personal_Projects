@@ -69,36 +69,46 @@ const NewNotes = ({ book }) => {
       setLoading(false);
     }
   };
-
-  return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">
-        Create New Notes
-      </h2>
-      <h3 className="text-sm text-gray-600 mb-4">
-        Book Title: <span className="font-semibold">{book.title}</span>
-      </h3>
-      <form onSubmit={handleCreateNote}>
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Document Title:
-        </label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter book title"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-        />
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-        {successMessage && (
-          <p className="text-green-500 text-sm mt-2">{successMessage}</p>
-        )}
-        <button type="submit" className="Buttons w-full" disabled={loading}>
-          {loading ? "Creating..." : "Create Notes"}
-        </button>
-      </form>
-    </div>
-  );
+  if (localStorage.getItem("googleVerified") === "true")
+    return (
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Create New Notes
+        </h2>
+        <h3 className="text-sm text-gray-600 mb-4">
+          Book Title: <span className="font-semibold">{book.title}</span>
+        </h3>
+        <form onSubmit={handleCreateNote}>
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Document Title:
+          </label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter book title"
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          />
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {successMessage && (
+            <p className="text-green-500 text-sm mt-2">{successMessage}</p>
+          )}
+          <button type="submit" className="Buttons w-full" disabled={loading}>
+            {loading ? "Creating..." : "Create Notes"}
+          </button>
+        </form>
+      </div>
+    );
+  else {
+    return (
+      <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Please sign in with your google account to create new notes.
+        </h2>
+        <p className="text-gray-600"></p>
+      </div>
+    );
+  }
 };
 
 export default NewNotes;

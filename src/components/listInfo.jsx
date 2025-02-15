@@ -28,12 +28,12 @@ export default function ListInfo() {
   const {
     title,
     author,
-    publisher,
     publishYear,
-    language,
+
     coverImage,
-    firstSentence,
-    subjects,
+    languages,
+    readOnline,
+    key,
   } = book;
   if (isAuthenticated)
     return (
@@ -82,16 +82,6 @@ export default function ListInfo() {
                   {title || "Unknown Title"}
                 </h1>
                 <br />
-                <p className="text-base/7 font-semibold text-gray-700">
-                  <strong>Publishers: </strong>
-                  {publisher || "Unknown Publisher"}
-                </p>
-
-                <p className="mt-6 text-xl/8 text-gray-700">
-                  <strong>First Sentence: </strong>
-                  {firstSentence ||
-                    "Not available for this book. Check OpenLibrary for more details."}
-                </p>
               </div>
             </div>
           </div>
@@ -111,10 +101,24 @@ export default function ListInfo() {
                 <p>
                   <strong>Year of Publication:</strong> {publishYear || "N/A"}
                 </p>
-                <p>
-                  <strong>Language:</strong> {language || "Unknown"}
-                </p>
                 <ul role="list" className="mt-8 space-y-8 text-gray-600">
+                  <strong>Languages:</strong>
+                  {languages &&
+                    languages
+                      .split(",")
+                      .map((subject) => subject.trim()) // Trim each subject to remove extra spaces
+                      .filter((subject) => subject.length > 0) // Filter out any empty subjects
+                      .map((subject, index) => (
+                        <li key={index} className="flex gap-x-3">
+                          <ChevronRight
+                            aria-hidden="true"
+                            className="mt-1 size-5 flex-none text-indigo-600"
+                          />
+                          <span>{subject}</span>
+                        </li>
+                      ))}
+                </ul>
+                {/* <ul role="list" className="mt-8 space-y-8 text-gray-600">
                   <strong>Subjects:</strong>
                   {subjects &&
                     subjects
@@ -130,7 +134,7 @@ export default function ListInfo() {
                           <span>{subject}</span>
                         </li>
                       ))}
-                </ul>
+                </ul> */}
                 <p className="mt-8">
                   For more details, visit the OpenLibrary page for this book.
                 </p>
