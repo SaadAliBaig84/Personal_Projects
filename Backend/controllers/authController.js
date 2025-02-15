@@ -9,6 +9,8 @@ const { getAllUsers, getUserByEmail } = require("../models/userQuery");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const { Strategy } = require("passport-local");
+const { User } = require("../models/psqlWrapper");
+const axios = require("axios");
 async function encyptPass(pass) {
   const saltRounds = 10;
   try {
@@ -99,12 +101,27 @@ const googleSignIn = async (req, res) => {
         expiresIn: 86400,
       }
     );
+    const profileImage = req.user.picture || "";
+    console.log("here in singin");
+    console.log(req.user._doc.google_data.access_token);
+    const response = await axios.get(
+      "https://www.googleapis.com/oauth2/v3/userinfo",
+      {
+        headers: {
+          Authorization: `Bearer ${req.user._doc.google_data.access_token}`,
+        },
+      }
+    );
+
+    console.log("Profile Picture URL:", response.data.picture);
 
     const params = new URLSearchParams({
       name: req.user.name,
       jwt: newJwt,
       googleVerified: true,
+      profilePicture: response.data.picture,
     });
+
     res.redirect(`http://localhost:5173?${params}`);
   } catch (error) {
     console.log(error);
@@ -137,6 +154,18 @@ passport.use(
         } else {
           user = await createGoogleUser(profile, accessToken, refreshToken);
         }
+
+        setInterval(async () => {
+          try {
+            const temp = await User.findById(profile.id);
+            const refresh_token = temp.google_data.refresh_token;
+            const access_token = temp.google_data.access_token;
+            console.log("Refreshing token...periodically");
+            await updateGoogleToken(profile, access_token, refresh_token);
+          } catch (error) {
+            console.error("Error refreshing token:", error);
+          }
+        }, 55 * 60 * 1000);
         console.log("here, sent back params");
         done(null, { ...user, accessToken, refreshToken });
       } catch (error) {

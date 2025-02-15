@@ -15,4 +15,18 @@ const createGoogleDoc = async (accessToken, docTitle) => {
   }
 };
 
-module.exports = { createGoogleDoc };
+const deleteNoteUtil = async (accessToken, googleDocId) => {
+  try {
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials({ access_token: accessToken });
+    const drive = google.drive({ version: "v3", auth: auth });
+    console.log("Deleting doc:", googleDocId);
+    const res = await drive.files.delete({
+      fileId: googleDocId,
+    });
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+module.exports = { createGoogleDoc, deleteNoteUtil };

@@ -24,6 +24,7 @@ const requireAuth = async (req, res, next) => {
     req.user = match.id;
 
     console.log(match.name, "has been authorized.");
+    console.log("here 2");
     next();
   } catch (error) {
     console.log("here 3");

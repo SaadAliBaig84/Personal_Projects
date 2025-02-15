@@ -87,7 +87,6 @@ const NotesSchema = new mongoose.Schema(
         googleDocId: {
           type: String, // Google Docs Document ID
           required: true,
-          unique: true, // Ensures no duplicate documents
         },
       },
     ],
