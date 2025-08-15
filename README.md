@@ -74,5 +74,4 @@ This project is licensed under the MIT License.
 
 Saad Ali Baig
 
-## 📂 Project Structure
 
